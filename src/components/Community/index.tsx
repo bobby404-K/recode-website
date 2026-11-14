@@ -1,4 +1,4 @@
-import React, { type FC, useEffect, useState, useMemo } from "react";
+import React, { type FC, useMemo } from "react";
 import SlotCounter from "react-slot-counter";
 import "./LandingCommunity.css";
 import { useCommunityStatsContext } from "@site/src/lib/statsProvider";
@@ -50,7 +50,7 @@ export const LandingCommunity: FC<Props> = ({ className }) => {
         statText: githubForksCountText,
         description:
           "Forks of our repositories the community extends and builds on our work.",
-        href: "https://github.com/orgs/recodehive/discussions",
+        href: "https://github.com/orgs/recodehive/repositories",
         label: "Community Forks",
       },
     ],
@@ -66,12 +66,6 @@ export const LandingCommunity: FC<Props> = ({ className }) => {
     ],
   );
 
-  const handleCardClick = (href: string) => {
-    if (href) {
-      window.open(href, "_blank", "noopener,noreferrer");
-    }
-  };
-
   return (
     <div className={`landing-community ${className || ""}`}>
       <div className="landing-community__header">
@@ -85,55 +79,61 @@ export const LandingCommunity: FC<Props> = ({ className }) => {
 
       <div className="landing-community__content">
         <div className="landing-community__stats">
-          {generateList.map((item, index) => (
-            <div
-              key={index}
-              className={`landing-community__stat-item ${item.href ? "clickable" : ""}`}
-              onClick={() => handleCardClick(item.href)}
-              role={item.href ? "button" : "presentation"}
-              tabIndex={item.href ? 0 : -1}
-              onKeyDown={(e) => {
-                if (item.href && (e.key === "Enter" || e.key === " ")) {
-                  e.preventDefault();
-                  handleCardClick(item.href);
-                }
-              }}
-              title={item.href ? `Click to visit ${item.label}` : item.label}
-            >
-              <div className="landing-community__stat-value">
-                <span>
-                  <SlotCounter
-                    value={item.stat}
-                    duration={2}
-                    animateOnVisible={{
-                      triggerOnce: true,
-                      rootMargin: "0px 0px -100px 0px",
-                    }}
-                    numberSlotClassName="slot-counter-number"
-                    separatorClassName="slot-counter-separator"
-                  />
-                  {item.href && <span className="external-link-icon">↗</span>}
-                </span>
+          {generateList.map((item, index) => {
+            const cardContent = (
+              <>
+                <div className="landing-community__stat-value">
+                  <span>
+                    <SlotCounter
+                      value={item.stat}
+                      duration={2}
+                      animateOnVisible={{
+                        triggerOnce: true,
+                        rootMargin: "0px 0px -100px 0px",
+                      }}
+                      numberSlotClassName="slot-counter-number"
+                      separatorClassName="slot-counter-separator"
+                    />
+                    {item.href && <span className="external-link-icon">↗</span>}
+                  </span>
+                </div>
+                <div className="landing-community__stat-description">
+                  {item.description}
+                </div>
+              </>
+            );
+
+            return item.href ? (
+              <a
+                key={index}
+                className="landing-community__stat-item clickable"
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={`Click to visit ${item.label}`}
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                {cardContent}
+              </a>
+            ) : (
+              <div
+                key={index}
+                className="landing-community__stat-item"
+                title={item.label}
+              >
+                {cardContent}
               </div>
-              <div className="landing-community__stat-description">
-                {item.description}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
-        <div
+        <a
           className="landing-community__info clickable"
-          onClick={() => handleCardClick("https://github.com/recodehive")}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              handleCardClick("https://github.com/recodehive");
-            }
-          }}
+          href="https://github.com/recodehive"
+          target="_blank"
+          rel="noopener noreferrer"
           title="Click to visit recode hive GitHub Organization"
+          style={{ textDecoration: "none", color: "inherit" }}
         >
           <img
             className="landing-community__image"
@@ -150,7 +150,7 @@ export const LandingCommunity: FC<Props> = ({ className }) => {
               <span className="external-link-icon">↗</span> Explore our GitHub
             </span>
           </div>
-        </div>
+        </a>
       </div>
     </div>
   );
