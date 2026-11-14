@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Layout from "@theme/Layout";
+import Head from "@docusaurus/Head";
 import releases from "@site/src/data/releases.json";
 import { ReleaseBody } from "./_markdown";
 import ContributorCloud from "../../components/changelog/ContributorCloud";
@@ -149,8 +150,10 @@ export default function ChangelogPage(): JSX.Element {
     <Layout
       title="Changelog"
       description="Stay up-to-date with what's new at recode hive."
-      noIndex
     >
+      <Head>
+        <meta name="robots" content="noindex, nofollow" />
+      </Head>
       <div className="changelog__page">
         <div className="changelog__header">
           <h1>
